@@ -16,9 +16,6 @@ public class PostDTO implements ModelMapper<Post>{
     private Long id;
     
     private User user;
-
-    private List<Comment> comment;
-
     private String discription;
 
     private String title;
@@ -40,7 +37,6 @@ public class PostDTO implements ModelMapper<Post>{
     public Post mapToModel(Post post){
         post.setId(this.getId());
         post.setUser(this.getUser());
-        post.setComment(this.getComment());
         post.setTitle(this.getTitle());
         post.setDiscription(this.getDiscription());
         post.setImage(this.getImage());
@@ -51,7 +47,6 @@ public class PostDTO implements ModelMapper<Post>{
     public void mapToSelf(Post post){
         this.setId(post.getId());
         this.setUser(post.getUser());
-        this.setComment(post.getComment());
         this.setTitle(post.getTitle());
         this.setDiscription(post.getTitle());
         this.setImage(this.getImage());

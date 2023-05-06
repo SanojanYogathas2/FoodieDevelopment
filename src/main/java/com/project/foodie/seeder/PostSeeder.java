@@ -1,7 +1,6 @@
 package com.project.foodie.seeder;
 
 import java.util.Arrays;
-
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -26,7 +25,7 @@ public class PostSeeder  implements CommandLineRunner{
         post1.setUser(null);
 
         Post post2 = new Post();
-        post2.setId(1L);
+        post2.setId(2L);
         post2.setTitle("TestTitle");
         post2.setDiscription("TestDiscription");
         post2.setImage("ImageTest");

@@ -1,11 +1,9 @@
 package com.project.foodie.dto.comment;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import com.project.foodie.dto.ModelMapper;
+import com.project.foodie.dto.user.UserDTO;
 import com.project.foodie.model.comment.Comment;
-import com.project.foodie.model.post.Post;
 import com.project.foodie.model.user.User;
-import com.project.foodie.services.comment.CommentService;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,9 +15,7 @@ public class CommentDTO implements ModelMapper<Comment> {
 
     private Long id;
 
-    private Post post;
-
-    private User user;
+    private UserDTO user;
 
     private String content;
 
@@ -37,8 +33,7 @@ public class CommentDTO implements ModelMapper<Comment> {
     @Override
     public Comment mapToModel(Comment comment) {
         comment.setId(this.getId());
-        comment.setPost(this.getPost());
-        comment.setUser(this.getUser());
+        comment.setUser(this.getUser().getModel());
         comment.setContent(this.getContent());
         return comment;
     }
@@ -46,8 +41,7 @@ public class CommentDTO implements ModelMapper<Comment> {
     @Override
     public void mapToSelf(Comment comment) {
         this.setId(comment.getId());
-        this.setPost(comment.getPost());
-        this.setUser(comment.getUser());
+        this.setUser(new UserDTO(comment.getUser()));
         this.setContent(comment.getContent());
     }
 }

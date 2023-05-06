@@ -12,7 +12,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.project.foodie.dto.comment.CommentDTO;
 import com.project.foodie.dto.post.PostDTO;
+import com.project.foodie.model.comment.Comment;
 import com.project.foodie.model.post.Post;
 import com.project.foodie.services.post.PostService;
 import io.swagger.annotations.ApiOperation;
@@ -31,17 +34,17 @@ public class PostController {
         return new ResponseEntity<>(savedPost, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "Get all posts", response = Post.class)
+    @ApiOperation(value = "Get all posts", response = PostDTO.class)
     @GetMapping
-    public ResponseEntity<List<Post>> getUser() {
-        List<Post> post = postService.getAllPosts();
-        return new ResponseEntity<List<Post>>(post, HttpStatus.OK);
+    public ResponseEntity<List<PostDTO>> getUser() {
+        List<PostDTO> post = postService.getAllPosts();
+        return new ResponseEntity<List<PostDTO>>(post, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "Get post by Id", response = Post.class)
+    @ApiOperation(value = "Get post by Id", response = PostDTO.class)
     @GetMapping("{id}")
-    public ResponseEntity<Post> getLeadStageById(@PathVariable("id") Long id) {
-        Post result = postService.getPostById(id);
+    public ResponseEntity<PostDTO> getLeadStageById(@PathVariable("id") Long id) {
+        PostDTO result = postService.getPostById(id);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -50,5 +53,19 @@ public class PostController {
     public ResponseEntity<HttpStatus> deleteById(@PathVariable("id") Long id) {
         postService.deletePostById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @ApiOperation(value = "Create post comment", response = Comment.class)
+    @PostMapping("{id}/comments")
+    public ResponseEntity<Comment> upsertPostComment(@RequestBody Comment comment, @PathVariable("id") Long postId) {
+        Comment savedComment = postService.upsertPostComment(comment, postId);
+        return new ResponseEntity<>(savedComment, HttpStatus.CREATED);
+    }
+
+    @ApiOperation(value = "Get post commen by post id", response = CommentDTO.class)
+    @GetMapping("{id}/comments")
+    public ResponseEntity<List<CommentDTO>> getPostComments(@PathVariable("id") Long leadId) {
+        List<CommentDTO> postCommentDTOs = postService.getPostCommentsByPostId(leadId);
+        return new ResponseEntity<>(postCommentDTOs, HttpStatus.OK) ;
     }
 }

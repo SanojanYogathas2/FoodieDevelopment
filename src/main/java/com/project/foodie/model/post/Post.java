@@ -3,9 +3,13 @@ package com.project.foodie.model.post;
 import java.util.List;
 import com.project.foodie.model.comment.Comment;
 import com.project.foodie.model.user.User;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -25,8 +29,9 @@ public class Post {
     @ManyToOne
     private User user;
 
-    @OneToMany
-    private List<Comment> comment;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "post_id")
+    private List<Comment> comments;
 
     private String Discription;
 
