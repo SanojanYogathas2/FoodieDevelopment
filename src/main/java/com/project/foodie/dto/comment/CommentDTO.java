@@ -3,7 +3,6 @@ package com.project.foodie.dto.comment;
 import com.project.foodie.dto.ModelMapper;
 import com.project.foodie.dto.user.UserDTO;
 import com.project.foodie.model.comment.Comment;
-import com.project.foodie.model.user.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

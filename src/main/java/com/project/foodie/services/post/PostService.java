@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.project.foodie.dto.comment.CommentDTO;
 import com.project.foodie.dto.post.PostDTO;
+import com.project.foodie.dto.user.UserDTO;
 import com.project.foodie.model.comment.Comment;
-import com.project.foodie.model.post.Post;
 
 public interface PostService {
     PostDTO upsertPost(PostDTO postDTO);
@@ -16,7 +16,9 @@ public interface PostService {
 
     void deletePostById (Long id);
 
+    UserDTO addPostLike( UserDTO comment, Long postId);
+
     Comment upsertPostComment( Comment comment, Long postId);
 
-    List<CommentDTO> getPostCommentsByPostId( Long leadId);
+    List<CommentDTO> getPostCommentsByPostId( Long postId);
 }

@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.project.foodie.dto.comment.CommentDTO;
 import com.project.foodie.dto.post.PostDTO;
+import com.project.foodie.dto.user.UserDTO;
 import com.project.foodie.model.comment.Comment;
-import com.project.foodie.model.post.Post;
 import com.project.foodie.services.post.PostService;
 import io.swagger.annotations.ApiOperation;
 
@@ -55,6 +55,13 @@ public class PostController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    @ApiOperation(value = "Add post like")
+    @PostMapping("{id}/likes")
+    public ResponseEntity<UserDTO> addPostLike(@RequestBody UserDTO user, @PathVariable("id") Long postId) {
+        UserDTO savedLike = postService.addPostLike(user, postId);
+        return new ResponseEntity<>(savedLike, HttpStatus.CREATED);
+    }
+
     @ApiOperation(value = "Create post comment", response = Comment.class)
     @PostMapping("{id}/comments")
     public ResponseEntity<Comment> upsertPostComment(@RequestBody Comment comment, @PathVariable("id") Long postId) {
@@ -64,8 +71,8 @@ public class PostController {
 
     @ApiOperation(value = "Get post commen by post id", response = CommentDTO.class)
     @GetMapping("{id}/comments")
-    public ResponseEntity<List<CommentDTO>> getPostComments(@PathVariable("id") Long leadId) {
-        List<CommentDTO> postCommentDTOs = postService.getPostCommentsByPostId(leadId);
+    public ResponseEntity<List<CommentDTO>> getPostComments(@PathVariable("id") Long postId) {
+        List<CommentDTO> postCommentDTOs = postService.getPostCommentsByPostId(postId);
         return new ResponseEntity<>(postCommentDTOs, HttpStatus.OK) ;
     }
 }
