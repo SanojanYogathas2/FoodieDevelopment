@@ -33,6 +33,10 @@ public class Post {
     @JoinColumn(name = "post_id")
     private List<Comment> comments;
 
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "post_id")
+    private List<User> likes;
+
     private String Discription;
 
     @NotBlank
