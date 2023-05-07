@@ -16,8 +16,10 @@ import com.project.foodie.dto.user.UserDTO;
 import com.project.foodie.exception.BadRequestException;
 import com.project.foodie.exception.InternalServerErrorException;
 import com.project.foodie.model.comment.Comment;
+import com.project.foodie.model.notification.Notification;
 import com.project.foodie.model.post.Post;
 import com.project.foodie.model.user.User;
+import com.project.foodie.repository.notification.NotificationRepository;
 import com.project.foodie.repository.post.PostRepository;
 import com.project.foodie.repository.user.UserRepository;
 
@@ -32,13 +34,17 @@ public class PostServiceImpl implements PostService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private NotificationRepository notificationRepository;
+
     @Override
     public PostDTO upsertPost(PostDTO postDTO) {
 
         Post post = postDTO.getModel();
+        Optional<User> optionalUser = userRepository.findById(postDTO.getUser().getId());
+        post.setUser(optionalUser.get());
 
         Post result = new Post();
-
         try {
             result = postRepository.save(post);
         } catch (Exception e) {
@@ -52,9 +58,9 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostDTO getPostById(Long id) {
-        Optional<Post> userOptional = postRepository.findById(id);
-        PostDTO result = new PostDTO(userOptional.get());
-        if (!userOptional.isPresent()) {
+        Optional<Post> postOptional = postRepository.findById(id);
+        PostDTO result = new PostDTO(postOptional.get());
+        if (!postOptional.isPresent()) {
             logger.warn("invalid post id provide!");
             throw new BadRequestException("Invalid post id provied!");
         }
@@ -97,22 +103,33 @@ public class PostServiceImpl implements PostService {
         Post post = postOptional.get();
         List<Comment> postCommentList = new ArrayList<Comment>();
 
+        String notificationComment = " ";
         if (comment.getId() == null) {
             postCommentList.addAll(post.getComments());
             postCommentList.add(comment);
+            notificationComment = "added";
         } else { // updating an existing comment
             for (Comment postComment : post.getComments()) {
                 if (postComment.getId().equals(comment.getId())) {
                     postCommentList.add(comment);
+                    notificationComment = "updated";
                 } else {
                     postCommentList.add(postComment);
+                    notificationComment = "added";
                 }
             }
         }
         post.setComments(postCommentList);
 
+        // create notification
+        Notification notification = new Notification();
+        notification.setMessage(String.format("Comment %s for post for id: %s, by: %s", notificationComment, postId,
+                comment.getUser().getFirstName()));
+        notification.setUser(post.getUser());
+
         try {
             postRepository.save(post);
+            notificationRepository.save(notification);
         } catch (Exception e) {
             logger.error(String.format("failed to create post for: %s, error: %s", comment, e));
             throw new InternalServerErrorException("Failed to create post!");
@@ -143,8 +160,14 @@ public class PostServiceImpl implements PostService {
 
         post.setLikes(postLikeList);
 
+        // create notification
+        Notification notification = new Notification();
+        notification.setMessage(String.format("Post %s liked by %s ", postId, userDTO.getFirstName()));
+        notification.setUser(post.getUser());
+
         try {
             postRepository.save(post);
+            notificationRepository.save(notification);
         } catch (Exception e) {
             logger.error(String.format("failed to add like for: %s, error: %s", userDTO, e));
             throw new InternalServerErrorException("Failed to add like!");
