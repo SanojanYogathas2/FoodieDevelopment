@@ -4,12 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.project.foodie.dto.comment.CommentDTO;
 import com.project.foodie.dto.post.PostDTO;
 import com.project.foodie.dto.user.UserDTO;
@@ -162,7 +160,7 @@ public class PostServiceImpl implements PostService {
 
         // create notification
         Notification notification = new Notification();
-        notification.setMessage(String.format("Post %s liked by %s ", postId, userDTO.getFirstName()));
+        notification.setMessage(String.format("Post %s liked by %s ", postId, likedUser.get().getFirstName()));
         notification.setUser(post.getUser());
 
         try {

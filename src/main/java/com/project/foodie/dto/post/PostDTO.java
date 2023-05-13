@@ -1,7 +1,6 @@
 package com.project.foodie.dto.post;
 
 import java.util.List;
-
 import com.project.foodie.dto.ModelMapper;
 import com.project.foodie.dto.user.UserDTO;
 import com.project.foodie.model.post.Post;
@@ -17,6 +16,7 @@ public class PostDTO implements ModelMapper<Post>{
     private Long id;
     
     private UserDTO user;
+
     private String discription;
 
     private List<User> likes;
@@ -53,7 +53,7 @@ public class PostDTO implements ModelMapper<Post>{
         }
         this.setTitle(post.getTitle());
         this.setLikes(post.getLikes());
-        this.setDiscription(post.getTitle());
+        this.setDiscription(post.getDiscription());
         this.setImage(this.getImage());
     }
 

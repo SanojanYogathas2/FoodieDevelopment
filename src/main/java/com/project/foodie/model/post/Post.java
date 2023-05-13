@@ -37,10 +37,10 @@ public class Post {
     @JoinColumn(name = "post_id")
     private List<User> likes;
 
-    private String Discription;
+    private String discription;
 
     @NotBlank
     private String title;
 
-    private String Image;
+    private String image;
 }
